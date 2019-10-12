@@ -71,10 +71,12 @@ const WaitingRoom = ({ gameState, gate, history, ...props }) => {
       setGameScores(val);
       console.log(val);
     });
-    return gameScoresRef.off;
+    return () => {
+      gameScoresRef.off();
+    };
   }, []);
 
-  // Registra l'interval de clock
+  //Registra l'interval de clock
   useEffect(() => {
     const intId = setInterval(() => {
       setCurrentTime(Date.now());
