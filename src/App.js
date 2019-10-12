@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import MainPage from "./components/MainPage";
 import GateSelector from "./components/GateSelector";
 import WaitRoom from "./components/WaitRoom";

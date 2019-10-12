@@ -1,4 +1,3 @@
-import React from "react";
 import { withStyles } from "@material-ui/styles";
 import { CircularProgress, LinearProgress } from "@material-ui/core";
 
