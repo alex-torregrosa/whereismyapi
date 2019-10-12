@@ -11,10 +11,10 @@ var randomN = l => {
   return Math.floor(n);
 };
 
-var request = url => {
+var request = async url => {
   const response = await axios.get(url);
   return response.data;
-}
+};
 
 router.get("/", async (req, res) => {
   var apiKeys = [
@@ -34,7 +34,7 @@ router.get("/", async (req, res) => {
   const url = `http://aviation-edge.com/v2/public/flights?key=${
     apiKeys[randomN(apiKeys.length)]
   }&status=en-route&limit=3000`;
-  const data = request(url);
+  const data = await request(url);
 
   let plane = data[randomN(data.length)];
   let plane_info = (({
@@ -54,7 +54,7 @@ router.get("/", async (req, res) => {
   }&flight_icao=${plane_info.planeIcao}&dep_iataCode=${
     plane_info.departureIata
   }`;
-  const data2 = request(url2)[0];
+  const data2 = (await request(url2))[0];
 
   plane_info.departureTime = data2.departure.scheduledTime;
   plane_info.arrivalTime = data2.arrival.scheduledTime;
@@ -62,15 +62,22 @@ router.get("/", async (req, res) => {
   const url3 = `https://aviation-edge.com/v2/public/airportDatabase?key=${
     apiKeys[randomN(apiKeys.length)]
   }&codeIataAirport=${plane_info.departureIata}`;
-  const data3 = request(url3)[0];
+  const data3 = (await request(url3))[0];
   plane_info.departureAirport = data3.nameAirport;
-  console.log(data3);
-  
+  plane_info.departureAirportGeography = {
+    latitude: parseFloat(data3.latitudeAirport),
+    longitude: parseFloat(data3.longitudeAirport)
+  };
+
   const url4 = `https://aviation-edge.com/v2/public/airportDatabase?key=${
     apiKeys[randomN(apiKeys.length)]
   }&codeIataAirport=${plane_info.arrivalIata}`;
-  const data4 = request(url4)[0];
+  const data4 = (await request(url4))[0];
   plane_info.arrivalAirport = data4.nameAirport;
+  plane_info.arrivalAirportGeography = {
+    latitude: parseFloat(data4.latitudeAirport),
+    longitude: parseFloat(data4.longitudeAirport)
+  };
 
   var ref = db.ref("/gameState");
   ref.set({
@@ -80,7 +87,9 @@ router.get("/", async (req, res) => {
     endAirport: plane_info.arrivalAirport,
     icao: plane_info.planeIcao,
     latitude: plane_info.geography.latitude,
-    longitude: plane_info.geography.longitude
+    longitude: plane_info.geography.longitude,
+    departureAirportGeography: plane_info.departureAirportGeography,
+    arrivalAirportGeography: plane_info.arrivalAirportGeography
   });
 
   res.send(plane_info);
