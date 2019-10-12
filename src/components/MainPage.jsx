@@ -38,12 +38,14 @@ const MainPage = ({ history, ...props }) => {
         JocRandom
       </Typography>
       <div className={classes.playButtonContainer}>
-        <IconButton aria-label="play">
+        <IconButton
+          aria-label="play"
+          onClick={() => history.push("/gateselection")}
+        >
           <PlayArrowIcon
             fontSize="large"
             className={classes.playIcon}
             classes={{ fontSizeLarge: classes.bigFont }}
-            onClick={() => history.push("/gateselection")}
           />
         </IconButton>
       </div>

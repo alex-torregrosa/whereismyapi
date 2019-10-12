@@ -2,46 +2,18 @@ import React, { Component, useState, useEffect } from "react";
 import MainPage from "./components/MainPage";
 import GateSelector from "./components/GateSelector";
 import WaitRoom from "./components/WaitRoom";
+import TheGame from "./components/TheGame";
 import { CssBaseline } from "@material-ui/core";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import db from "./lambda/lib/firebase";
-
-class LambdaDemo extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { loading: false, msg: null };
-  }
-
-  handleClick = () => e => {
-    e.preventDefault();
-
-    this.setState({ loading: true });
-    fetch("/.netlify/functions/api/game")
-      .then(response => response.json())
-      .then(json => this.setState({ loading: false, msg: json.msg }));
-  };
-
-  render() {
-    const { loading, msg } = this.state;
-
-    return (
-      <p>
-        <button onClick={this.handleClick()}>
-          {loading ? "Loading..." : "Call Lambda"}
-        </button>
-        <br />
-        <span>{msg}</span>
-      </p>
-    );
-  }
-}
+const gameStateRef = db.ref("gameState");
 
 function App(props) {
   const [gate, setGate] = useState("-");
   const [gameState, setGameStateVar] = useState(false);
 
   useEffect(() => {
-    const gameStateRef = db.ref("gameState");
+    gameStateRef.off();
     gameStateRef.on("value", snapshot => {
       const val = snapshot.val();
       console.log(val);
@@ -58,6 +30,9 @@ function App(props) {
         </Route>
         <Route path="/waitingroom">
           <WaitRoom gate={gate} gameState={gameState} />
+        </Route>
+        <Route path="/play">
+          <TheGame gate={gate} gameState={gameState} />
         </Route>
         <Route path="/">
           <MainPage />

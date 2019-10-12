@@ -2,10 +2,16 @@ import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import { Button, CircularProgress, LinearProgress } from "@material-ui/core";
+import {
+  WhiteCircularProgress,
+  WhiteLinearProgress
+} from "./utils/WhiteComponents";
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/styles";
 import ClockIcon from "@material-ui/icons/Alarm";
+import db from "../lambda/lib/firebase";
+
+const gameScoresRef = db.ref("/scores");
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -43,21 +49,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const WhiteCircularProgress = withStyles({
-  root: {
-    color: "#FFF"
-  }
-})(CircularProgress);
-
-const WhiteLinearProgress = withStyles({
-  bar1Indeterminate: {
-    backgroundColor: "#FFF"
-  },
-  bar2Indeterminate: {
-    backgroundColor: "#FFF"
-  }
-})(LinearProgress);
-
 const BigClockIcon = withStyles({
   root: {
     color: "#FFF",
@@ -67,10 +58,23 @@ const BigClockIcon = withStyles({
 
 const WaitingRoom = ({ gameState, gate, history, ...props }) => {
   const classes = useStyles();
-
+  const [gameScores, setGameScores] = useState([]);
   const [currentTime, setCurrentTime] = useState(Date.now());
   const [waiting, setWaiting] = useState(false);
+  const [queued, setQueued] = useState(false);
 
+  // Registra listener per a gameScores
+  useEffect(() => {
+    console.log("Running effects");
+    gameScoresRef.on("value", snapshot => {
+      const val = snapshot.val();
+      setGameScores(val);
+      console.log(val);
+    });
+    return gameScoresRef.off;
+  }, []);
+
+  // Registra l'interval de clock
   useEffect(() => {
     const intId = setInterval(() => {
       setCurrentTime(Date.now());
@@ -80,6 +84,7 @@ const WaitingRoom = ({ gameState, gate, history, ...props }) => {
     };
   }, []);
 
+  // Reseteja waiting al rebre estat nou de firebase
   useEffect(() => {
     setWaiting(Date.now() > gameState.endTime);
   }, [gameState]);
@@ -92,13 +97,15 @@ const WaitingRoom = ({ gameState, gate, history, ...props }) => {
     );
   }
 
-  const { endAirport, endTime, startAirport, startTime } = gameState;
+  const { endTime, startTime } = gameState;
 
   const Countdown = (...props) => {
     let remTime = 0;
     if (currentTime < startTime) {
       remTime = startTime - currentTime;
+      setQueued(true);
     } else if (currentTime < endTime) {
+      if (queued) history.push("/play");
       remTime = endTime - currentTime + 5000;
     } else remTime = -1000;
 
@@ -125,9 +132,18 @@ const WaitingRoom = ({ gameState, gate, history, ...props }) => {
           )}
         </div>
       </div>
-      End Airport: {endAirport}
-      <br />
-      endTime: {endTime}
+      <div>
+        {(() => {
+          let arr = [];
+          for (let team in gameScores)
+            arr.push(
+              <Typography variant="h5" key={`teamscore_${team}`}>
+                {team}: {gameScores[team]}
+              </Typography>
+            );
+          return arr;
+        })()}
+      </div>
       <br />
     </div>
   );
