@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
   },
   titleText: {
     color: "#FFFFFF",
-    marginTop: "10%"
+    marginTop: theme.spacing(2)
   },
   gateList: {
     display: "flex",
