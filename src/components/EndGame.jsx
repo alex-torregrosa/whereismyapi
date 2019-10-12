@@ -52,7 +52,11 @@ const EndGame = ({ history, points, ...props }) => {
   return (
     <div className={classes.main}>
       <span className={classes.emojis}>
-        {celebrations[Math.floor((celebrations.length * points - 1) / 5000)]}
+        {
+          celebrations[
+            Math.max(0, Math.floor((celebrations.length * points - 1) / 5000))
+          ]
+        }
       </span>
       <div className={classes.pointsBall}>+{points}</div>
     </div>
