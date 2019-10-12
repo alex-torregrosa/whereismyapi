@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Button, CircularProgress, LinearProgress } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/styles";
+import ClockIcon from "@material-ui/icons/Alarm";
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -14,15 +15,31 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     flexDirection: "column"
   },
-  titleText: {
-    color: "#FFFFFF",
-    marginTop: "10%"
+  seconds: {
+    color: "#FFFFFF"
+  },
+  linHolder: {
+    paddingLeft: theme.spacing(2)
+  },
+  secondsHolder: {
+    flexGrow: 1,
+    textAlign: "center"
   },
   load: {
     justifyContent: "center"
   },
-  progressContainer: {
-    width: "100vw"
+  timeCounter: {
+    display: "flex",
+    width: "100vw",
+    padding: theme.spacing(2),
+    paddingLeft: theme.spacing(4),
+    paddingRight: theme.spacing(4),
+    alignItems: "center",
+    background: "#0093c4"
+  },
+  timeIcon: {
+    marginLeft: theme.spacing(4),
+    marginTop: theme.spacing(-0.5)
   }
 }));
 
@@ -32,10 +49,27 @@ const WhiteCircularProgress = withStyles({
   }
 })(CircularProgress);
 
+const WhiteLinearProgress = withStyles({
+  bar1Indeterminate: {
+    backgroundColor: "#FFF"
+  },
+  bar2Indeterminate: {
+    backgroundColor: "#FFF"
+  }
+})(LinearProgress);
+
+const BigClockIcon = withStyles({
+  root: {
+    color: "#FFF",
+    fontSize: "3rem"
+  }
+})(ClockIcon);
+
 const WaitingRoom = ({ gameState, gate, history, ...props }) => {
   const classes = useStyles();
 
   const [currentTime, setCurrentTime] = useState(Date.now());
+  const [waiting, setWaiting] = useState(false);
 
   useEffect(() => {
     const intId = setInterval(() => {
@@ -45,6 +79,10 @@ const WaitingRoom = ({ gameState, gate, history, ...props }) => {
       clearInterval(intId);
     };
   }, []);
+
+  useEffect(() => {
+    setWaiting(Date.now() > gameState.endTime);
+  }, [gameState]);
 
   if (!gameState) {
     return (
@@ -65,17 +103,28 @@ const WaitingRoom = ({ gameState, gate, history, ...props }) => {
     } else remTime = -1000;
 
     remTime = Math.floor(remTime / 1000);
-    if (remTime == -1)
-      return (
-        <div className={classes.progressContainer}>
-          <LinearProgress />
-        </div>
-      );
-    return <Typography variant="h3">{remTime}</Typography>;
+    if (!waiting && remTime === -1) setWaiting(true);
+    console.log("rendering");
+    return (
+      <Typography variant="h3" component="span" className={classes.seconds}>
+        {remTime}
+      </Typography>
+    );
   };
   return (
     <div className={classes.main}>
-      <Countdown />
+      <div className={classes.timeCounter}>
+        <BigClockIcon className={classes.timeIcon} />
+        <div className={classes.secondsHolder}>
+          {waiting ? (
+            <div className={classes.linHolder}>
+              <WhiteLinearProgress />
+            </div>
+          ) : (
+            <Countdown />
+          )}
+        </div>
+      </div>
       End Airport: {endAirport}
       <br />
       endTime: {endTime}
