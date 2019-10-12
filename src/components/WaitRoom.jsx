@@ -17,7 +17,7 @@ const gameScoresRef = db.ref("/scores");
 const useStyles = makeStyles(theme => ({
   main: {
     display: "flex",
-    background: "#c5ecf7",
+    background: "#70C1B3",
     height: "100vh",
     alignItems: "center",
     flexDirection: "column"
@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: theme.spacing(4),
     paddingRight: theme.spacing(4),
     alignItems: "center",
-    background: "#0093c4"
+    background: "#247BA0"
   },
   timeIcon: {
     marginLeft: theme.spacing(4),
@@ -141,16 +141,6 @@ const WaitingRoom = ({ gameState, gate, history, ...props }) => {
         </div>
       </div>
       <div>
-        {(() => {
-          let arr = [];
-          for (let team in gameScores)
-            arr.push(
-              <Typography variant="h5" key={`teamscore_${team}`}>
-                {team}: {gameScores[team]}
-              </Typography>
-            );
-          return arr;
-        })()}
         <BarChart data={gameScores} />
       </div>
       <br />

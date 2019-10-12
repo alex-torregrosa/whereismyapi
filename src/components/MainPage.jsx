@@ -28,8 +28,17 @@ const useStyles = makeStyles(theme => ({
     left: "50%",
     transform: "translate(-50%,-50%)"
   },
-  playIcon: {
-    color: "#FFFFFF"
+  sunImage: {
+    color: "#FFFFFF",
+    maxHeight: "200px",
+    maxWidth: "200px",
+    height: "50vmin",
+    width: "50vmin",
+    animationName: "$sunGrow",
+    animationDuration: "1s",
+    animationIterationCount: "infinite",
+    animationDirection: "alternate",
+    animationTimingFunction: "linear"
   },
   bigFont: {
     fontSize: "10rem"
@@ -41,13 +50,15 @@ const useStyles = makeStyles(theme => ({
     bottom: 0,
     width: "100%",
     padding: "0px",
-    maxHeight: "300px"
+    maxHeight: "300px",
+    pointerEvents: "none"
   },
   groundImg: {
     width: "100%",
     margin: "0px",
     padding: "0px",
-    marginBottom: "-20px"
+    marginBottom: "-20px",
+    pointerEvents: "none"
   },
   cloudContainer: {
     position: "fixed",
@@ -58,7 +69,28 @@ const useStyles = makeStyles(theme => ({
     position: "fixed",
     left: "50%",
     top: "15vmin",
-    transform: "translate(-50%,0%)"
+    transform: "translate(-50%,0%)",
+    textAlign: "center",
+    width: "80vw"
+  },
+  cloudImage: {
+    height: "40vmin",
+    width: "80vmin"
+  },
+  "@media screen and (max-width:824px) and (orientation:landscape) ": {
+    groundContainer: {
+      bottom: "-15vw"
+    },
+    playButtonContainer: {
+      transform: "translate(-50%,-30%)"
+    },
+    titleContainer: {
+      top: "0vmin"
+    }
+  },
+  "@keyframes sunGrow": {
+    from: { transform: "scale(1)" },
+    to: { transform: "scale(1.1)" }
   }
 }));
 
@@ -68,7 +100,7 @@ const MainPage = ({ history, ...props }) => {
   return (
     <div className={classes.main}>
       <div className={classes.cloudContainer}>
-        <img src={Cloud} height="250px" width="500px" alt="Cloud" />
+        <img src={Cloud} className={classes.cloudImage} alt="Cloud" />
       </div>
       <div className={classes.titleContainer}>
         <Typography variant="h3" className={classes.titleText}>
@@ -80,14 +112,7 @@ const MainPage = ({ history, ...props }) => {
           aria-label="play"
           onClick={() => history.push("/gateselection")}
         >
-          <img
-            src={Sun}
-            maxheight="250px"
-            maxwidth="250px"
-            height="200vmin"
-            width="200vmin"
-            alt="Sun"
-          />
+          <img src={Sun} className={classes.sunImage} alt="Sun" />
         </IconButton>
       </div>
       <div className={classes.groundContainer}>
