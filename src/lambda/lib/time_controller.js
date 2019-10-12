@@ -32,7 +32,7 @@ export const getPlaneInfo = async () => {
   }&status=en-route&limit=3000`;
   const data = await request(url);
 
-  let plane = data[randomN(data.length)];
+  const plane = data[randomN(data.length)];
   let plane_info = (({
     geography,
     flight: { icaoNumber: planeIcao },
