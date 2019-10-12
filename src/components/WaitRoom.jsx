@@ -60,13 +60,12 @@ const BigClockIcon = withStyles({
 const WaitingRoom = ({ gameState, gate, history, ...props }) => {
   const classes = useStyles();
   const [gameScores, setGameScores] = useState([]);
-  const [currentTime, setCurrentTime] = useState(Date.now());
-  const [waiting, setWaiting] = useState(false);
+  const [seconds, setSeconds] = useState(99);
+  const [waiting, setWaiting] = useState(true);
   const [queued, setQueued] = useState(false);
 
   // Registra listener per a gameScores
   useEffect(() => {
-    console.log("Running effects");
     gameScoresRef.on("value", snapshot => {
       const val = snapshot.val();
       setGameScores(val);
@@ -78,18 +77,39 @@ const WaitingRoom = ({ gameState, gate, history, ...props }) => {
 
   //Registra l'interval de clock
   useEffect(() => {
+    const { endTime, startTime } = gameState;
     const intId = setInterval(() => {
-      setCurrentTime(Date.now());
+      // Prepare times
+      let time = Date.now();
+      let remTime = 0;
+      const nextStart = endTime + 35000;
+
+      // Prepare for start if came before
+      if (time < startTime) {
+        remTime = startTime - time;
+        setQueued(true);
+      } else if (time < nextStart) {
+        if (queued) {
+          // Start game if queued
+          setWaiting(true);
+          history.push("/play");
+          return 0;
+        }
+        remTime = nextStart - time;
+      } else remTime = -1000; // Waiting for update
+      // Adjust to seconds
+      remTime = Math.floor(remTime / 1000);
+      if (remTime === -1) {
+        setWaiting(true);
+      } else {
+        setSeconds(remTime);
+        setWaiting(false);
+      }
     }, 1000);
     return () => {
       clearInterval(intId);
     };
-  }, []);
-
-  // Reseteja waiting al rebre estat nou de firebase
-  useEffect(() => {
-    setWaiting(Date.now() > gameState.endTime);
-  }, [gameState]);
+  }, [gameState, history, queued, waiting]);
 
   if (!gameState) {
     return (
@@ -99,27 +119,10 @@ const WaitingRoom = ({ gameState, gate, history, ...props }) => {
     );
   }
 
-  const { endTime, startTime } = gameState;
-
-  const Countdown = (...props) => {
-    let remTime = 0;
-    if (currentTime < startTime) {
-      remTime = startTime - currentTime;
-      setQueued(true);
-    } else if (currentTime < endTime + 30000) {
-      if (queued) {
-        history.push("/play");
-        return 0;
-      }
-      remTime = endTime - currentTime + 30000;
-    } else remTime = -1000;
-
-    remTime = Math.floor(remTime / 1000);
-    if (!waiting && remTime === -1) setWaiting(true);
-    console.log("rendering");
+  const Countdown = ({ time, ...props }) => {
     return (
       <Typography variant="h3" component="span" className={classes.seconds}>
-        {remTime}
+        {time}
       </Typography>
     );
   };
@@ -133,7 +136,7 @@ const WaitingRoom = ({ gameState, gate, history, ...props }) => {
               <WhiteLinearProgress />
             </div>
           ) : (
-            <Countdown />
+            <Countdown time={seconds} />
           )}
         </div>
       </div>
