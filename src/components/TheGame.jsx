@@ -1,11 +1,16 @@
-import React from "react";
-
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { createRef, useState, useEffect } from "react";
+import { Typography, LinearProgress, createMuiTheme } from "@material-ui/core";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/styles";
 import clsx from "clsx";
+import cuid from "cuid";
 import { withRouter } from "react-router-dom";
 import { Map, TileLayer, Marker } from "react-leaflet";
 import { WhiteCircularProgress } from "./utils/WhiteComponents";
+import db from "../lambda/lib/firebase";
+
+const defaultTheme = createMuiTheme();
+
 const useStyles = makeStyles(theme => ({
   main: {
     display: "flex",
@@ -27,13 +32,61 @@ const useStyles = makeStyles(theme => ({
   },
   map: {
     flex: 1
-  }
+  },
+  progressHolder: {
+    width: "100vw"
+  },
+  thiccProgressBar: {}
 }));
+
+const CustomLinearProgress = withStyles({
+  bar1Determinate: {
+    backgroundColor: "#FFF"
+  },
+  bar2Indeterminate: {
+    backgroundColor: "#FFF"
+  }
+})(LinearProgress);
 
 const TheGame = ({ history, gate, gameState, ...props }) => {
   const classes = useStyles();
-  const { departureAirportGeography, arrivalAirportGeography } = gameState;
+  const {
+    departureAirportGeography,
+    arrivalAirportGeography,
+    endTime,
+    startTime
+  } = gameState;
+  const mapRef = createRef();
 
+  //States
+  const [clickPtr, setClickPtr] = useState([]);
+  const [currentTime, setCurrentTime] = useState(0);
+
+  // Registra l'interval de clock
+  useEffect(() => {
+    const intId = setInterval(() => {
+      setCurrentTime(Date.now());
+      if (Date.now() > gameState.endTime) {
+        if (clickPtr.length !== 0) {
+          // Submit score
+          const dir = db.ref("/users/" + gate + "/" + cuid());
+          console.log([clickPtr.lat, clickPtr.lng]);
+          dir.set([clickPtr.lat, clickPtr.lng]);
+          history.push("/");
+        }
+      }
+    }, 1000);
+    return () => {
+      clearInterval(intId);
+    };
+  }, [gameState, clickPtr]);
+
+  //Map click handler
+  const handleClick = e => {
+    setClickPtr(e.latlng);
+  };
+
+  // Loader
   if (!gameState) {
     return (
       <div className={clsx([classes.main, classes.load])}>
@@ -47,8 +100,24 @@ const TheGame = ({ history, gate, gameState, ...props }) => {
       <Typography variant="h3" className={classes.titleText}>
         TheGame2
       </Typography>
+      <div className={classes.progressHolder}>
+        <ThemeProvider theme={{ ...defaultTheme, direction: "rtl" }}>
+          <CustomLinearProgress
+            className={classes.thiccProgressBar}
+            variant="determinate"
+            value={(100 * (endTime - currentTime)) / (endTime - startTime)}
+          />
+        </ThemeProvider>
+      </div>
+
       <div className={classes.mapContainer}>
-        <Map className={classes.map} center={[41.3828939, 2.1774322]} zoom={5}>
+        <Map
+          className={classes.map}
+          center={[41.3828939, 2.1774322]}
+          zoom={5}
+          ref={mapRef}
+          onClick={handleClick}
+        >
           <TileLayer url="https://api.mapbox.com/styles/v1/alextorre98/ck1n5yfjz0l4m1cmzjvxg4c11/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYWxleHRvcnJlOTgiLCJhIjoiY2sxbjV4eG4yMDdoazNtbzYyN241dzJxcSJ9.bU2z_rn5C-uJbISiCs6MEQ" />
           <Marker
             position={[
@@ -62,6 +131,7 @@ const TheGame = ({ history, gate, gameState, ...props }) => {
               arrivalAirportGeography.longitude
             ]}
           />
+          {clickPtr.length !== 0 && <Marker position={clickPtr} />}
         </Map>
       </div>
     </div>
