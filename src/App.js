@@ -1,9 +1,10 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect } from "react";
 import MainPage from "./components/MainPage";
 import GateSelector from "./components/GateSelector";
 import WaitRoom from "./components/WaitRoom";
 import { CssBaseline } from "@material-ui/core";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
+import db from "./lambda/lib/firebase";
 
 class LambdaDemo extends Component {
   constructor(props) {
@@ -37,6 +38,16 @@ class LambdaDemo extends Component {
 
 function App(props) {
   const [gate, setGate] = useState("-");
+  const [gameState, setGameStateVar] = useState(false);
+
+  useEffect(() => {
+    const gameStateRef = db.ref("gameState");
+    gameStateRef.on("value", snapshot => {
+      const val = snapshot.val();
+      console.log(val);
+      setGameStateVar(val);
+    });
+  }, []);
 
   return (
     <Router>
@@ -46,7 +57,7 @@ function App(props) {
           <GateSelector setGate={setGate} />
         </Route>
         <Route path="/waitingroom">
-          <WaitRoom gate={gate} />
+          <WaitRoom gate={gate} gameState={gameState} />
         </Route>
         <Route path="/">
           <MainPage />
