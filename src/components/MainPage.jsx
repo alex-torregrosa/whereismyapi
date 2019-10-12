@@ -40,7 +40,8 @@ const useStyles = makeStyles(theme => ({
     right: 0,
     bottom: 0,
     width: "100%",
-    padding: "0px"
+    padding: "0px",
+    maxHeight: "300px"
   },
   groundImg: {
     width: "100%",
@@ -79,11 +80,18 @@ const MainPage = ({ history, ...props }) => {
           aria-label="play"
           onClick={() => history.push("/gateselection")}
         >
-          <img src={Sun} maxheight="250px" maxwidth="250px" height="200vmin" width="200vmin" alt="Sun" />
+          <img
+            src={Sun}
+            maxheight="250px"
+            maxwidth="250px"
+            height="200vmin"
+            width="200vmin"
+            alt="Sun"
+          />
         </IconButton>
       </div>
       <div className={classes.groundContainer}>
-        <img className={classes.groundImg} src={Ground} alt="Mountain"/>
+        <img className={classes.groundImg} src={Ground} alt="Mountain" />
       </div>
     </div>
   );
