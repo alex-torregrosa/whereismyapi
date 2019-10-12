@@ -3,7 +3,6 @@ import React from "react";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { IconButton } from "@material-ui/core";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import Sun from "../images/sun.svg";
 import Ground from "../images/ground.svg";
 import { withRouter } from "react-router-dom";
