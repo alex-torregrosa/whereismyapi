@@ -1,6 +1,7 @@
 import Router from "express-promise-router";
 import axios from "axios";
 import db from "../lib/firebase";
+import { detectScrollType } from "normalize-scroll-left";
 
 const router = new Router();
 // Exportem el router
@@ -81,8 +82,10 @@ router.get("/", async (req, res) => {
 
   var ref = db.ref("/gameState");
   ref.set({
-    startTime: new Date(plane_info.departureTime).getTime(),
-    endTime: new Date(plane_info.arrivalTime).getTime(),
+    startTime: Date.now() + 2000,
+    endTime: Date.now() + 22000,
+    plainDeparture: new Date(plane_info.departureTime).getTime(),
+    plainArrival: new Date(plane_info.arrivalTime).getTime(),
     startAirport: plane_info.departureAirport,
     endAirport: plane_info.arrivalAirport,
     icao: plane_info.planeIcao,
