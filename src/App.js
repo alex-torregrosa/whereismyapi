@@ -1,4 +1,9 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
+import MainPage from "./components/MainPage";
+import GateSelector from "./components/GateSelector";
+import WaitRoom from "./components/WaitRoom";
+import { CssBaseline } from "@material-ui/core";
+import { HashRouter as Router, Switch, Route } from "react-router-dom";
 
 class LambdaDemo extends Component {
   constructor(props) {
@@ -30,17 +35,25 @@ class LambdaDemo extends Component {
   }
 }
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <p>Benvingut!</p>
-          <LambdaDemo />
-        </header>
-      </div>
-    );
-  }
+function App(props) {
+  const [gate, setGate] = useState("-");
+
+  return (
+    <Router>
+      <CssBaseline />
+      <Switch>
+        <Route path="/gateselection">
+          <GateSelector setGate={setGate} />
+        </Route>
+        <Route path="/waitingroom">
+          <WaitRoom gate={gate} />
+        </Route>
+        <Route path="/">
+          <MainPage />
+        </Route>
+      </Switch>
+    </Router>
+  );
 }
 
 export default App;
