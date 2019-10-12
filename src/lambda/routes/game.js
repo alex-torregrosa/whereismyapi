@@ -11,6 +11,11 @@ var randomN = l => {
   return Math.floor(n);
 };
 
+var request = url => {
+  const response = await axios.get(url);
+  return response.data;
+}
+
 router.get("/", async (req, res) => {
   var apiKeys = [
     "3f4daa-8ef9bb",
@@ -29,8 +34,7 @@ router.get("/", async (req, res) => {
   const url = `http://aviation-edge.com/v2/public/flights?key=${
     apiKeys[randomN(apiKeys.length)]
   }&status=en-route&limit=3000`;
-  const response = await axios.get(url);
-  const data = response.data;
+  const data = request(url);
 
   let plane = data[randomN(data.length)];
   let plane_info = (({
@@ -50,24 +54,30 @@ router.get("/", async (req, res) => {
   }&flight_icao=${plane_info.planeIcao}&dep_iataCode=${
     plane_info.departureIata
   }`;
-
-  console.log(plane_info);
-
-  const response2 = await axios.get(url2);
-  const data2 = response2.data[0];
-
-  console.log(url2);
-  console.log(data2);
+  const data2 = request(url2)[0];
 
   plane_info.departureTime = data2.departure.scheduledTime;
   plane_info.arrivalTime = data2.arrival.scheduledTime;
+
+  const url3 = `https://aviation-edge.com/v2/public/airportDatabase?key=${
+    apiKeys[randomN(apiKeys.length)]
+  }&codeIataAirport=${plane_info.departureIata}`;
+  const data3 = request(url3)[0];
+  plane_info.departureAirport = data3.nameAirport;
+  console.log(data3);
+  
+  const url4 = `https://aviation-edge.com/v2/public/airportDatabase?key=${
+    apiKeys[randomN(apiKeys.length)]
+  }&codeIataAirport=${plane_info.arrivalIata}`;
+  const data4 = request(url4)[0];
+  plane_info.arrivalAirport = data4.nameAirport;
 
   var ref = db.ref("/gameState");
   ref.set({
     startTime: new Date(plane_info.departureTime).getTime(),
     endTime: new Date(plane_info.arrivalTime).getTime(),
-    startAirport: plane_info.departureIata,
-    endAirport: plane_info.arrivalIata,
+    startAirport: plane_info.departureAirport,
+    endAirport: plane_info.arrivalAirport,
     icao: plane_info.planeIcao,
     latitude: plane_info.geography.latitude,
     longitude: plane_info.geography.longitude
