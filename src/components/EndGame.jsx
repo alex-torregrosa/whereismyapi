@@ -41,9 +41,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const EndGame = ({ history, ...props }) => {
+const EndGame = ({ history, points, ...props }) => {
   const classes = useStyles();
-  const points = 500;
   console.log((celebrations.length * points - 1) / 5000);
   useEffect(() => {
     setTimeout(() => {
