@@ -143,7 +143,9 @@ const haversine = ([lat1, lon1], [lat2, lon2]) => {
 
 const computeScore = ([lat1, lon1], [lat2, lon2]) => {
   const param = 5000;
-  return param - haversine([lat1, lon1], [lat2, lon2]);
+  let score = param - haversine([lat1, lon1], [lat2, lon2]);
+  score = score > 0 ? score : 0;
+  return score;
 };
 
 export const calcScores = async () => {
@@ -156,10 +158,7 @@ export const calcScores = async () => {
   for (gate in users) {
     users.gate.score = 0;
     for (user in users.gate) {
-      const userScore =
-        computeScore(corrGeography, users.gate.user) > 0
-          ? computeScore(corrGeography, users.gate.user)
-          : 0;
+      const userScore = computeScore(corrGeography, users.gate.user);
       users.gate.score += userScore;
     }
   }
