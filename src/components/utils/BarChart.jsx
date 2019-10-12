@@ -17,7 +17,7 @@ export const BarChart = ({ data, ...props }) => {
   ];
   console.log(data);
   for (let item in data)
-    dataPts = [...dataPts, [item, data[item], "red", null]];
+    dataPts = [...dataPts, [item, data[item], "yellow", null]];
   console.log(dataPts);
   return (
     <div>
@@ -50,7 +50,8 @@ export const BarChart = ({ data, ...props }) => {
           width: 600,
           height: 400,
           bar: { groupWidth: "95%" },
-          legend: { position: "none" }
+          legend: { position: "none" },
+          backgroundColor: "#0093c4"
         }}
         // For tests
         rootProps={{ "data-testid": "6" }}
