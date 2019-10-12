@@ -34,8 +34,8 @@ const haversine = ([lat1, lon1], [lat2, lon2]) => {
 };
 
 export const computeScore = ([lat1, lon1], [lat2, lon2]) => {
-  const param = 5000;
-  let score = param - haversine([lat1, lon1], [lat2, lon2]);
+  const params = { a: 0.05, b: 0.2 };
+  let score = 1 / (a * haversine([lat1, lon1], [lat2, lon2]) + b);
   score = score > 0 ? score : 0;
   return score;
 };

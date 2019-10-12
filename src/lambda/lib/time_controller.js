@@ -149,17 +149,11 @@ const computeScore = ([lat1, lon1], [lat2, lon2]) => {
 };
 
 export const calcScores = async () => {
-  const gameState = await db
-    .ref("/gameState")
-    .once("value")
-    .val();
-  const corrGeography = [gameState.latitude, gameState.longitude];
   let users = (await db.ref("/users").once("value")).val();
-  for (gate in users) {
-    users.gate.score = 0;
-    for (user in users.gate) {
-      const userScore = computeScore(corrGeography, users.gate.user);
-      users.gate.score += userScore;
+  for (const gate in users) {
+    users[gate].score = 0;
+    for (const userScore of users[gate]) {
+      users[gate].score += userScore;
     }
   }
   console.log(users);
