@@ -96,10 +96,10 @@ const TheGame = ({ history, gate, gameState, setPoints, ...props }) => {
           );
           dir.set(punts);
           setPoints(punts);
-          history.push("/endGame");
+          //history.push("/endGame");
         } else {
           setPoints(0);
-          history.push("/endGame");
+          //history.push("/endGame");
         }
       }
     }, 1000);
@@ -118,7 +118,7 @@ const TheGame = ({ history, gate, gameState, setPoints, ...props }) => {
     var year = a.getFullYear();
     var month = a.getMonth() + 1; // Return number between 0 and 11
     var date = a.getDate();
-    var hour = a.getHours();
+    var hour = a.getHours() < 10 ? '0' + a.getHours() : a.getHours();
     var min = a.getMinutes() < 10 ? '0' + a.getMinutes() : a.getMinutes();
     var sec = a.getSeconds() < 10 ? '0' + a.getSeconds() : a.getSeconds();
     var time = hour + ':' + min + ':' + sec + ' ' + date + '/' + month + '/' + year; 
@@ -140,14 +140,14 @@ const TheGame = ({ history, gate, gameState, setPoints, ...props }) => {
         <span className={classes.timeSpan}>
           <img src={ImgDeparture} alt="Departure" className={classes.timeImg}/>
           <div className={classes.timeContainer}>
-            <div>{timeConverter(gameState.startTime)}</div>
+            <div>{timeConverter(gameState.planeDeparture)}</div>
             <div>{gameState.startAirport}</div>
           </div>
         </span>
         <span className={classes.timeSpan}>
           <img src={ImgArrival} alt="Arrival" className={classes.timeImg}/>
           <div className={classes.timeContainer}>
-            <div>{timeConverter(gameState.endTime)}</div>
+            <div>{timeConverter(gameState.planeArrival)}</div>
             <div>{gameState.endAirport}</div>
           </div>
         </span>
