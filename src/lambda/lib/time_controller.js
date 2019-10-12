@@ -48,7 +48,28 @@ export const getPlaneInfo = async () => {
   let limit = 3000;
 
   while (!successQuery && limit > 0) {
-    const plane = data[randomN(data.length)];
+    let plane = false;
+    let successQuery2 = false;
+    while (!(plane = data[randomN(data.length)]) || !successQuery2) {
+      console.log(
+        plane.geography,
+        plane.flight.icaoNumber,
+        plane.departure.iataCode,
+        plane.arrival.iataCode
+      );
+      if (
+        !(
+          !plane.geography ||
+          !plane.flight.icaoNumber ||
+          !plane.departure.iataCode ||
+          !plane.arrival.iataCode
+        )
+      ) {
+        successQuery2 = true;
+        console.log("m'agrada");
+      }
+    }
+
     var plane_info = plane_info_get(plane);
 
     const url2 = `http://aviation-edge.com/v2/public/timetable?key=${
@@ -57,7 +78,6 @@ export const getPlaneInfo = async () => {
       plane_info.departureIata
     }`;
     let data2 = await request(url2);
-    console.log(data2);
     if (!data2.error) {
       // console.log(data2.error);
       successQuery = true;
@@ -65,6 +85,7 @@ export const getPlaneInfo = async () => {
       plane_info.departureTime = data2.departure.scheduledTime;
       plane_info.arrivalTime = data2.arrival.scheduledTime;
     }
+    console.log("data2", successQuery ? "funciona" : data2);
 
     limit--; //Per si no en troba cap que funcioni, just in case
   }
@@ -73,6 +94,7 @@ export const getPlaneInfo = async () => {
     apiKeys[randomN(apiKeys.length)]
   }&codeIataAirport=${plane_info.departureIata}`;
   const data3 = (await request(url3))[0];
+  console.log("request3", data3);
   plane_info.departureAirport = data3.nameAirport;
   plane_info.departureAirportGeography = {
     latitude: parseFloat(data3.latitudeAirport),
@@ -83,6 +105,7 @@ export const getPlaneInfo = async () => {
     apiKeys[randomN(apiKeys.length)]
   }&codeIataAirport=${plane_info.arrivalIata}`;
   const data4 = (await request(url4))[0];
+  console.log("request4", data4);
   plane_info.arrivalAirport = data4.nameAirport;
   plane_info.arrivalAirportGeography = {
     latitude: parseFloat(data4.latitudeAirport),
@@ -121,13 +144,11 @@ export const calcScores = async () => {
   }
 
   const gateScores = (await scoresRef.once("value")).val();
-  console.log(gateScores);
   for (const gate in users) {
     // Si existeix sumem, si no (o es 0), asignem
     if (gateScores[gate]) gateScores[gate] += users[gate].score;
     else gateScores[gate] = users[gate].score;
   }
-  console.log(gateScores);
   await scoresRef.set(gateScores);
   await usersRef.remove();
 };
