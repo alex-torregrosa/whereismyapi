@@ -4,8 +4,8 @@ import { Chart } from "react-google-charts";
 export const BarChart = ({ data, ...props }) => {
   let dataPts = [
     [
-      "Element",
-      "Density",
+      "Gate",
+      "Points",
       { role: "style" },
       {
         sourceColumn: 0,
