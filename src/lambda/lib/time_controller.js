@@ -157,4 +157,9 @@ export const calcScores = async () => {
     }
   }
   console.log(users);
+
+  const gateScores = (await db.ref("/scores").once("values")).val();
+  for (const gate in users) {
+    db.ref().update({ gate: gateScores[gate] + users[gate].score });
+  }
 };
