@@ -31,15 +31,47 @@ router.get("/", async (req, res) => {
   }&status=en-route&limit=3000`;
   const response = await axios.get(url);
   const data = response.data;
+
   let plane = data[randomN(data.length)];
-  let plane_info = {};
-  plane_info.geography = plane.geography;
+  let plane_info = (({
+    geography,
+    flight: { icaoNumber: planeIcao },
+    departure: { iataCode: departureIata },
+    arrival: { iataCode: arrivalIata }
+  }) => ({
+    geography,
+    planeIcao,
+    departureIata,
+    arrivalIata
+  }))(plane);
 
-  console.log(data.length);
+  const url2 = `http://aviation-edge.com/v2/public/timetable?key=${
+    apiKeys[randomN(apiKeys.length)]
+  }&flight_icao=${plane_info.planeIcao}&dep_iataCode=${
+    plane_info.departureIata
+  }`;
 
-  //var plane_info = {};
-  //plane_info.icao24 = data[n][0]
-  //plane_info.lonlat = [data[n][5], data[n][6]];
+  console.log(plane_info);
 
-  res.send(data);
+  const response2 = await axios.get(url2);
+  const data2 = response2.data[0];
+
+  console.log(url2);
+  console.log(data2);
+
+  plane_info.departureTime = data2.departure.scheduledTime;
+  plane_info.arrivalTime = data2.arrival.scheduledTime;
+
+  var ref = db.ref("/gameState");
+  ref.set({
+    startTime: new Date(plane_info.departureTime).getTime(),
+    endTime: new Date(plane_info.arrivalTime).getTime(),
+    startAirport: plane_info.departureIata,
+    endAirport: plane_info.arrivalIata,
+    icao: plane_info.planeIcao,
+    latitude: plane_info.geography.latitude,
+    longitude: plane_info.geography.longitude
+  });
+
+  res.send(plane_info);
 });
