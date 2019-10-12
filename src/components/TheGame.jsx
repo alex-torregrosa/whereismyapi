@@ -86,7 +86,7 @@ const TheGame = ({ history, gate, gameState, ...props }) => {
     return () => {
       clearInterval(intId);
     };
-  }, [gameState, clickPtr]);
+  }, [gameState, clickPtr, gate, history]);
 
   //Map click handler
   const handleClick = e => {
