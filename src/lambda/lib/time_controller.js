@@ -29,7 +29,7 @@ var apiKeys = [
 export const getPlaneInfo = async () => {
   const url = `http://aviation-edge.com/v2/public/flights?key=${
     apiKeys[randomN(apiKeys.length)]
-  }&status=en-route&limit=3000`;
+    }&status=en-route&limit=3000`;
   const data = await request(url);
 
   let plane_info_get = ({
@@ -53,9 +53,9 @@ export const getPlaneInfo = async () => {
 
     const url2 = `http://aviation-edge.com/v2/public/timetable?key=${
       apiKeys[randomN(apiKeys.length)]
-    }&flight_icao=${plane_info.planeIcao}&dep_iataCode=${
+      }&flight_icao=${plane_info.planeIcao}&dep_iataCode=${
       plane_info.departureIata
-    }`;
+      }`;
     let data2 = await request(url2);
     console.log(data2);
     if (!data2.error) {
@@ -71,7 +71,7 @@ export const getPlaneInfo = async () => {
 
   const url3 = `https://aviation-edge.com/v2/public/airportDatabase?key=${
     apiKeys[randomN(apiKeys.length)]
-  }&codeIataAirport=${plane_info.departureIata}`;
+    }&codeIataAirport=${plane_info.departureIata}`;
   const data3 = (await request(url3))[0];
   plane_info.departureAirport = data3.nameAirport;
   plane_info.departureAirportGeography = {
@@ -81,7 +81,7 @@ export const getPlaneInfo = async () => {
 
   const url4 = `https://aviation-edge.com/v2/public/airportDatabase?key=${
     apiKeys[randomN(apiKeys.length)]
-  }&codeIataAirport=${plane_info.arrivalIata}`;
+    }&codeIataAirport=${plane_info.arrivalIata}`;
   const data4 = (await request(url4))[0];
   plane_info.arrivalAirport = data4.nameAirport;
   plane_info.arrivalAirportGeography = {
@@ -110,14 +110,14 @@ export const getPlaneInfo = async () => {
 const haversine = ([lat1, lon1], [lat2, lon2]) => {
   // Math lib function names
   const [pi, asin, sin, cos, sqrt, pow, round] = [
-      "PI",
-      "asin",
-      "sin",
-      "cos",
-      "sqrt",
-      "pow",
-      "round"
-    ].map(k => Math[k]),
+    "PI",
+    "asin",
+    "sin",
+    "cos",
+    "sqrt",
+    "pow",
+    "round"
+  ].map(k => Math[k]),
     // degrees as radians
     [rlat1, rlat2, rlon1, rlon2] = [lat1, lat2, lon1, lon2].map(
       x => (x / 180) * pi
@@ -129,14 +129,14 @@ const haversine = ([lat1, lon1], [lat2, lon2]) => {
   return (
     round(
       radius *
-        2 *
-        asin(
-          sqrt(
-            pow(sin(dLat / 2), 2) +
-              pow(sin(dLon / 2), 2) * cos(rlat1) * cos(rlat2)
-          )
-        ) *
-        100
+      2 *
+      asin(
+        sqrt(
+          pow(sin(dLat / 2), 2) +
+          pow(sin(dLon / 2), 2) * cos(rlat1) * cos(rlat2)
+        )
+      ) *
+      100
     ) / 100
   );
 };
@@ -149,17 +149,30 @@ const computeScore = ([lat1, lon1], [lat2, lon2]) => {
 };
 
 export const calcScores = async () => {
-  let users = (await db.ref("/users").once("value")).val();
-  for (const gate in users) {
-    users[gate].score = 0;
-    for (const userScore of users[gate]) {
-      users[gate].score += userScore;
-    }
-  }
-  console.log(users);
+  const usersRef =  db.ref("/users");
+  const scoresRef =  db.ref("/scores");
 
-  const gateScores = (await db.ref("/scores").once("values")).val();
+  let users = (await usersRef.once("value")).val();
+
   for (const gate in users) {
-    db.ref().update({ gate: gateScores[gate] + users[gate].score });
+    let tempScore = 0;
+    for (const user in users[gate]) {
+      tempScore += users[gate][user];
+    }
+    users[gate].score = tempScore;
   }
+
+
+  const gateScores = (await scoresRef.once("value")).val();
+  console.log(gateScores)
+  for (const gate in users) {
+    // Si existeix sumem, si no (o es 0), asignem
+    if(gateScores[gate])
+      gateScores[gate] += users[gate].score;
+    else
+      gateScores[gate] = users[gate].score; 
+  }
+  console.log(gateScores)
+  await scoresRef.set(gateScores);
+  await usersRef.remove();
 };
