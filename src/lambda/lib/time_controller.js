@@ -168,8 +168,8 @@ export const getPlaneInfo = async () => {
   ref.set({
     startTime: Date.now() + 2000,
     endTime: Date.now() + 22000,
-    plainDeparture: new Date(plane_info.departureTime).getTime(),
-    plainArrival: new Date(plane_info.arrivalTime).getTime(),
+    planeDeparture: new Date(plane_info.departureTime).getTime(),
+    planeArrival: new Date(plane_info.arrivalTime).getTime(),
     startAirport: plane_info.departureAirport,
     endAirport: plane_info.arrivalAirport,
     icao: plane_info.planeIcao,
