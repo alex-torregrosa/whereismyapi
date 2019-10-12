@@ -14,10 +14,14 @@ function App(props) {
 
   useEffect(() => {
     gameStateRef.off();
+    console.log("Setting gameState Listener");
     gameStateRef.on("value", snapshot => {
       const val = snapshot.val();
-      console.log(val);
-      setGameStateVar(val);
+      if (val) {
+        console.log(val);
+        setGameStateVar(val);
+        console.log("State set");
+      }
     });
   }, []);
 
