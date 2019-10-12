@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
   },
   titleText: {
     color: "#FFFFFF",
-    marginTop: "20%"
+    marginTop: theme.spacing(4)
   },
   playButtonContainer: {
     marginTop: "20%"
