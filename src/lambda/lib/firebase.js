@@ -1,7 +1,4 @@
-import * as firebase from "firebase";
-import grpc from "grpc";
-
-grpc.setLogVerbosity(1);
+import firebase from "firebase";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBkFH9xPHsqov99GEmS8OOusDnv32PVud8",
