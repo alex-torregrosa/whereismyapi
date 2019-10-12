@@ -8,7 +8,7 @@ const router = new Router();
 export default router;
 
 router.get("/", async (req, res) => {
-  calcScores();
+  await calcScores();
   await getPlaneInfo();
   res.send("currecta");
 });

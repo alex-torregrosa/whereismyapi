@@ -10,6 +10,7 @@ import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/styles";
 import ClockIcon from "@material-ui/icons/Alarm";
 import db from "../lambda/lib/firebase";
+import { BarChart } from "./utils/BarChart";
 
 const gameScoresRef = db.ref("/scores");
 
@@ -148,6 +149,7 @@ const WaitingRoom = ({ gameState, gate, history, ...props }) => {
             );
           return arr;
         })()}
+        <BarChart data={gameScores} />
       </div>
       <br />
     </div>
