@@ -1,3 +1,5 @@
+![Logo](src/images/where_is_airplane.png)
+
 # Where is my API?
 Cross-platform game for connecting and entertaining people in airport queues
 
