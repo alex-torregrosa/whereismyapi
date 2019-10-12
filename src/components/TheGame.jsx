@@ -50,7 +50,7 @@ const CustomLinearProgress = withStyles({
   }
 })(LinearProgress);
 
-const TheGame = ({ history, gate, gameState, ...props }) => {
+const TheGame = ({ history, gate, gameState, setPoints, ...props }) => {
   const classes = useStyles();
   const {
     departureAirportGeography,
@@ -73,20 +73,20 @@ const TheGame = ({ history, gate, gameState, ...props }) => {
           // Submit score
           const dir = db.ref("/users/" + gate + "/" + cuid());
           console.log([clickPtr.lat, clickPtr.lng]);
-          dir.set(
-            computeScore(
-              [clickPtr.lat, clickPtr.lng],
-              [gameState.latitude, gameState.longitude]
-            )
+          let punts = computeScore(
+            [clickPtr.lat, clickPtr.lng],
+            [gameState.latitude, gameState.longitude]
           );
-          history.push("/");
+          dir.set(punts);
+          setPoints(punts);
+          history.push("/endGame");
         }
       }
     }, 1000);
     return () => {
       clearInterval(intId);
     };
-  }, [gameState, clickPtr, gate, history]);
+  }, [gameState, clickPtr, gate, history, setPoints]);
 
   //Map click handler
   const handleClick = e => {

@@ -106,60 +106,28 @@ export const getPlaneInfo = async () => {
   });
 };
 
-// haversine :: (Num, Num) -> (Num, Num) -> Num
-const haversine = ([lat1, lon1], [lat2, lon2]) => {
-  // Math lib function names
-  const [pi, asin, sin, cos, sqrt, pow, round] = [
-      "PI",
-      "asin",
-      "sin",
-      "cos",
-      "sqrt",
-      "pow",
-      "round"
-    ].map(k => Math[k]),
-    // degrees as radians
-    [rlat1, rlat2, rlon1, rlon2] = [lat1, lat2, lon1, lon2].map(
-      x => (x / 180) * pi
-    ),
-    dLat = rlat2 - rlat1,
-    dLon = rlon2 - rlon1,
-    radius = 6372.8; // km
-  // km
-  return (
-    round(
-      radius *
-        2 *
-        asin(
-          sqrt(
-            pow(sin(dLat / 2), 2) +
-              pow(sin(dLon / 2), 2) * cos(rlat1) * cos(rlat2)
-          )
-        ) *
-        100
-    ) / 100
-  );
-};
-
-const computeScore = ([lat1, lon1], [lat2, lon2]) => {
-  const param = 5000;
-  let score = param - haversine([lat1, lon1], [lat2, lon2]);
-  score = score > 0 ? score : 0;
-  return score;
-};
-
 export const calcScores = async () => {
-  let users = (await db.ref("/users").once("value")).val();
-  for (const gate in users) {
-    users[gate].score = 0;
-    for (const userScore of users[gate]) {
-      users[gate].score += userScore;
-    }
-  }
-  console.log(users);
+  const usersRef = db.ref("/users");
+  const scoresRef = db.ref("/scores");
 
-  const gateScores = (await db.ref("/scores").once("values")).val();
+  let users = (await usersRef.once("value")).val();
+
   for (const gate in users) {
-    db.ref().update({ gate: gateScores[gate] + users[gate].score });
+    let tempScore = 0;
+    for (const user in users[gate]) {
+      tempScore += users[gate][user];
+    }
+    users[gate].score = tempScore;
   }
+
+  const gateScores = (await scoresRef.once("value")).val();
+  console.log(gateScores);
+  for (const gate in users) {
+    // Si existeix sumem, si no (o es 0), asignem
+    if (gateScores[gate]) gateScores[gate] += users[gate].score;
+    else gateScores[gate] = users[gate].score;
+  }
+  console.log(gateScores);
+  await scoresRef.set(gateScores);
+  await usersRef.remove();
 };

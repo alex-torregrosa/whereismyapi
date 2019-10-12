@@ -3,6 +3,7 @@ import MainPage from "./components/MainPage";
 import GateSelector from "./components/GateSelector";
 import WaitRoom from "./components/WaitRoom";
 import TheGame from "./components/TheGame";
+import EndGame from "./components/EndGame";
 import { CssBaseline } from "@material-ui/core";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import db from "./lambda/lib/firebase";
@@ -11,6 +12,7 @@ const gameStateRef = db.ref("gameState");
 function App(props) {
   const [gate, setGate] = useState("-");
   const [gameState, setGameStateVar] = useState(false);
+  const [points, setPoints] = useState(false);
 
   useEffect(() => {
     gameStateRef.off();
@@ -36,7 +38,10 @@ function App(props) {
           <WaitRoom gate={gate} gameState={gameState} />
         </Route>
         <Route path="/play">
-          <TheGame gate={gate} gameState={gameState} />
+          <TheGame gate={gate} gameState={gameState} setPoints={setPoints} />
+        </Route>
+        <Route path="/endgame">
+          <EndGame points={points} />
         </Route>
         <Route path="/">
           <MainPage />
