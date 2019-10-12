@@ -19,13 +19,14 @@ const useStyles = makeStyles(theme => ({
   },
   titleText: {
     color: "#FFFFFF",
-    marginTop: theme.spacing(4)
+    marginTop: theme.spacing(4),
+    zIndex: 1
   },
   playButtonContainer: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    height: "100%"
+    position: "fixed",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%,-50%)"
   },
   playIcon: {
     color: "#FFFFFF"
@@ -50,8 +51,13 @@ const useStyles = makeStyles(theme => ({
   cloudContainer: {
     position: "fixed",
     top: 0,
-    right: 0,
-    zIndex: 1
+    right: 0
+  },
+  titleContainer: {
+    position: "fixed",
+    left: "50%",
+    top: "15vmin",
+    transform: "translate(-50%,0%)"
   }
 }));
 
@@ -61,17 +67,19 @@ const MainPage = ({ history, ...props }) => {
   return (
     <div className={classes.main}>
       <div className={classes.cloudContainer}>
-        <img src={Cloud} alt="Cloud" />
+        <img src={Cloud} height="250px" width="500px" alt="Cloud" />
       </div>
-      <Typography variant="h3" className={classes.titleText}>
-        Where's my <b>API</b>?
-      </Typography>
+      <div className={classes.titleContainer}>
+        <Typography variant="h3" className={classes.titleText}>
+          Where's my <b>API</b>?
+        </Typography>
+      </div>
       <div className={classes.playButtonContainer}>
         <IconButton
           aria-label="play"
           onClick={() => history.push("/gateselection")}
         >
-          <img src={Sun} height="250px" width="250px" alt="Sun" />
+          <img src={Sun} maxheight="250px" maxwidth="250px" height="200vmin" width="200vmin" alt="Sun" />
         </IconButton>
       </div>
       <div className={classes.groundContainer}>
