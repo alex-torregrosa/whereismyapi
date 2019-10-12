@@ -7,12 +7,8 @@ const router = new Router();
 // Exportem el router
 export default router;
 
-router.get("/planeinfo", async (req, res) => {
+router.get("/", async (req, res) => {
+  calcScores();
   await getPlaneInfo();
   res.send("currecta");
-});
-
-router.get("/scores", async (req, res) => {
-  calcScores();
-  res.send("hola");
 });
