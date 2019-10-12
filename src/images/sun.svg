@@ -26,7 +26,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.35"
-     inkscape:cx="223.35715"
+     inkscape:cx="-490.92856"
      inkscape:cy="1011.944"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -69,5 +69,23 @@
        id="path4547"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ccccccccccccc" />
+    <path
+       sodipodi:type="star"
+       style="fill:#fff6d5;fill-opacity:1;stroke:#ffffeb;stroke-width:19.10634422;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.02253521"
+       id="path815"
+       sodipodi:sides="3"
+       sodipodi:cx="46.736752"
+       sodipodi:cy="205.66611"
+       sodipodi:r1="108.85714"
+       sodipodi:r2="54.428574"
+       sodipodi:arg1="0"
+       sodipodi:arg2="1.0471976"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 155.59389,205.66611 -81.642854,47.13653 -81.6428542,47.13652 -3.9e-6,-94.27306 3.9e-6,-94.27304 81.6428592,47.13652 z"
+       inkscape:transform-center-x="-28.849533"
+       inkscape:transform-center-y="-2.336817e-06"
+       transform="matrix(1.0600879,0,0,1,8.7776617,2.2678571)" />
   </g>
 </svg>
