@@ -29,51 +29,49 @@ var apiKeys = [
 export const getPlaneInfo = async () => {
   const url = `http://aviation-edge.com/v2/public/flights?key=${
     apiKeys[randomN(apiKeys.length)]
-    }&status=en-route&limit=3000`;
+  }&status=en-route&limit=3000`;
   const data = await request(url);
 
-  let plane_info_get = (
-    ({
-      geography,
-      flight: { icaoNumber: planeIcao },
-      departure: { iataCode: departureIata },
-      arrival: { iataCode: arrivalIata }
-    }) => ({
-      geography,
-      planeIcao,
-      departureIata,
-      arrivalIata
-    })
-  );
-  
+  let plane_info_get = ({
+    geography,
+    flight: { icaoNumber: planeIcao },
+    departure: { iataCode: departureIata },
+    arrival: { iataCode: arrivalIata }
+  }) => ({
+    geography,
+    planeIcao,
+    departureIata,
+    arrivalIata
+  });
+
   let successQuery = false;
   let limit = 3000;
 
-  while (!successQuery || limit<0) {
+  while (!successQuery && limit > 0) {
     const plane = data[randomN(data.length)];
     var plane_info = plane_info_get(plane);
 
     const url2 = `http://aviation-edge.com/v2/public/timetable?key=${
       apiKeys[randomN(apiKeys.length)]
-      }&flight_icao=${plane_info.planeIcao}&dep_iataCode=${
+    }&flight_icao=${plane_info.planeIcao}&dep_iataCode=${
       plane_info.departureIata
-      }`;
+    }`;
     let data2 = await request(url2);
-
-    if (!data.error) {
+    console.log(data2);
+    if (!data2.error) {
+      // console.log(data2.error);
       successQuery = true;
       data2 = data2[0];
-      plane_info.departureTime = data.departure.scheduledTime;
+      plane_info.departureTime = data2.departure.scheduledTime;
       plane_info.arrivalTime = data2.arrival.scheduledTime;
-    } 
+    }
 
     limit--; //Per si no en troba cap que funcioni, just in case
-
   }
 
   const url3 = `https://aviation-edge.com/v2/public/airportDatabase?key=${
     apiKeys[randomN(apiKeys.length)]
-    }&codeIataAirport=${plane_info.departureIata}`;
+  }&codeIataAirport=${plane_info.departureIata}`;
   const data3 = (await request(url3))[0];
   plane_info.departureAirport = data3.nameAirport;
   plane_info.departureAirportGeography = {
@@ -83,7 +81,7 @@ export const getPlaneInfo = async () => {
 
   const url4 = `https://aviation-edge.com/v2/public/airportDatabase?key=${
     apiKeys[randomN(apiKeys.length)]
-    }&codeIataAirport=${plane_info.arrivalIata}`;
+  }&codeIataAirport=${plane_info.arrivalIata}`;
   const data4 = (await request(url4))[0];
   plane_info.arrivalAirport = data4.nameAirport;
   plane_info.arrivalAirportGeography = {
@@ -112,14 +110,14 @@ export const getPlaneInfo = async () => {
 const haversine = ([lat1, lon1], [lat2, lon2]) => {
   // Math lib function names
   const [pi, asin, sin, cos, sqrt, pow, round] = [
-    "PI",
-    "asin",
-    "sin",
-    "cos",
-    "sqrt",
-    "pow",
-    "round"
-  ].map(k => Math[k]),
+      "PI",
+      "asin",
+      "sin",
+      "cos",
+      "sqrt",
+      "pow",
+      "round"
+    ].map(k => Math[k]),
     // degrees as radians
     [rlat1, rlat2, rlon1, rlon2] = [lat1, lat2, lon1, lon2].map(
       x => (x / 180) * pi
@@ -131,20 +129,38 @@ const haversine = ([lat1, lon1], [lat2, lon2]) => {
   return (
     round(
       radius *
-      2 *
-      asin(
-        sqrt(
-          pow(sin(dLat / 2), 2) +
-          pow(sin(dLon / 2), 2) * cos(rlat1) * cos(rlat2)
-        )
-      ) *
-      100
+        2 *
+        asin(
+          sqrt(
+            pow(sin(dLat / 2), 2) +
+              pow(sin(dLon / 2), 2) * cos(rlat1) * cos(rlat2)
+          )
+        ) *
+        100
     ) / 100
   );
 };
 
-export const calcScores = async () => {
-  const users = (await db.ref("/users").once("value")).val();
+const computeScore = ([lat1, lon1], [lat2, lon2]) => {
+  const param = 5000;
+  let score = param - haversine([lat1, lon1], [lat2, lon2]);
+  score = score > 0 ? score : 0;
+  return score;
+};
 
+export const calcScores = async () => {
+  const gameState = await db
+    .ref("/gameState")
+    .once("value")
+    .val();
+  const corrGeography = [gameState.latitude, gameState.longitude];
+  let users = (await db.ref("/users").once("value")).val();
+  for (gate in users) {
+    users.gate.score = 0;
+    for (user in users.gate) {
+      const userScore = computeScore(corrGeography, users.gate.user);
+      users.gate.score += userScore;
+    }
+  }
   console.log(users);
 };

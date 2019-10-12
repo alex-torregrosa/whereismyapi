@@ -8,7 +8,7 @@ import { withRouter } from "react-router-dom";
 import { Map, TileLayer, Marker } from "react-leaflet";
 import { WhiteCircularProgress } from "./utils/WhiteComponents";
 import db from "../lambda/lib/firebase";
-
+import { IconArrival } from "./utils/icons";
 const defaultTheme = createMuiTheme();
 
 const useStyles = makeStyles(theme => ({
@@ -130,6 +130,7 @@ const TheGame = ({ history, gate, gameState, ...props }) => {
               arrivalAirportGeography.latitude,
               arrivalAirportGeography.longitude
             ]}
+            icon={IconArrival}
           />
           {clickPtr.length !== 0 && <Marker position={clickPtr} />}
         </Map>
