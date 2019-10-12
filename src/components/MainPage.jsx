@@ -4,6 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { IconButton } from "@material-ui/core";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+import Sun from "../images/sun.svg";
 import { withRouter } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
@@ -19,7 +20,10 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(4)
   },
   playButtonContainer: {
-    marginTop: "20%"
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%"
   },
   playIcon: {
     color: "#FFFFFF"
@@ -35,18 +39,19 @@ const MainPage = ({ history, ...props }) => {
   return (
     <div className={classes.main}>
       <Typography variant="h3" className={classes.titleText}>
-        JocRandom
+        Where's my <b>API</b>?
       </Typography>
       <div className={classes.playButtonContainer}>
         <IconButton
           aria-label="play"
           onClick={() => history.push("/gateselection")}
         >
-          <PlayArrowIcon
+          <img src={Sun} height="250px" width="250px" alt="Sun" />
+          {/* <PlayArrowIcon
             fontSize="large"
             className={classes.playIcon}
             classes={{ fontSizeLarge: classes.bigFont }}
-          />
+          /> */}
         </IconButton>
       </div>
     </div>
