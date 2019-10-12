@@ -15,10 +15,8 @@ export const BarChart = ({ data, ...props }) => {
       }
     ]
   ];
-  console.log(data);
   for (let item in data)
     dataPts = [...dataPts, [item, data[item], "yellow", null]];
-  console.log(dataPts);
   return (
     <div>
       <Chart
