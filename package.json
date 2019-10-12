@@ -25,7 +25,7 @@
     "build": "run-p build:**",
     "build:app": "react-scripts build",
     "build:lambda": "netlify-lambda build --config ./config/webpack.functions.js src/lambda",
-    "postinstall": "npm rebuild grpc --target=6.1.0 --target_arch=x64 --target_platform=linux --target_libc=glibc",
+    "postinstall": "npm rebuild grpc --target=10.0.0 --target_arch=x64 --target_platform=linux --target_libc=glibc",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
