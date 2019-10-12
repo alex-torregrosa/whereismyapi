@@ -70,7 +70,6 @@ const WaitingRoom = ({ gameState, gate, history, ...props }) => {
     gameScoresRef.on("value", snapshot => {
       const val = snapshot.val();
       setGameScores(val);
-      console.log(val);
     });
     return () => {
       gameScoresRef.off();
@@ -107,12 +106,12 @@ const WaitingRoom = ({ gameState, gate, history, ...props }) => {
     if (currentTime < startTime) {
       remTime = startTime - currentTime;
       setQueued(true);
-    } else if (currentTime < endTime) {
+    } else if (currentTime < endTime + 30000) {
       if (queued) {
         history.push("/play");
         return 0;
       }
-      remTime = endTime - currentTime + 5000;
+      remTime = endTime - currentTime + 30000;
     } else remTime = -1000;
 
     remTime = Math.floor(remTime / 1000);
