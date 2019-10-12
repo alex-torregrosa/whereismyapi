@@ -105,7 +105,10 @@ const WaitingRoom = ({ gameState, gate, history, ...props }) => {
       remTime = startTime - currentTime;
       setQueued(true);
     } else if (currentTime < endTime) {
-      if (queued) history.push("/play");
+      if (queued) {
+        history.push("/play");
+        return 0;
+      }
       remTime = endTime - currentTime + 5000;
     } else remTime = -1000;
 
