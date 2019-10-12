@@ -95,6 +95,7 @@ export const getPlaneInfo = async () => {
   }&codeIataAirport=${plane_info.departureIata}`;
   const data3 = (await request(url3))[0];
   console.log("request3", data3);
+  if (!data3) return getPlaneInfo();
   plane_info.departureAirport = data3.nameAirport;
   plane_info.departureAirportGeography = {
     latitude: parseFloat(data3.latitudeAirport),
@@ -106,7 +107,8 @@ export const getPlaneInfo = async () => {
   }&codeIataAirport=${plane_info.arrivalIata}`;
   const data4 = (await request(url4))[0];
   console.log("request4", data4);
-  plane_info.arrivalAirport = data4.nameAirport;
+  if (!data4) return getPlaneInfo();
+  plane_info.departureAirport = data4.nameAirport;
   plane_info.arrivalAirportGeography = {
     latitude: parseFloat(data4.latitudeAirport),
     longitude: parseFloat(data4.longitudeAirport)

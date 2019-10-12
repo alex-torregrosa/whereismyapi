@@ -17,7 +17,7 @@ const gameScoresRef = db.ref("/scores");
 const useStyles = makeStyles(theme => ({
   main: {
     display: "flex",
-    background: "#4fc3f7",
+    background: "#c5ecf7",
     height: "100vh",
     alignItems: "center",
     flexDirection: "column"
