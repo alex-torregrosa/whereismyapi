@@ -8,7 +8,9 @@ import { withRouter } from "react-router-dom";
 import { Map, TileLayer, Marker } from "react-leaflet";
 import { WhiteCircularProgress } from "./utils/WhiteComponents";
 import db from "../lambda/lib/firebase";
-import { IconArrival } from "./utils/icons";
+import { IconArrival, IconDeparture, IconPlane } from "./utils/icons";
+import { computeScore } from "./utils/scoreUtils";
+
 const defaultTheme = createMuiTheme();
 
 const useStyles = makeStyles(theme => ({
@@ -71,7 +73,12 @@ const TheGame = ({ history, gate, gameState, ...props }) => {
           // Submit score
           const dir = db.ref("/users/" + gate + "/" + cuid());
           console.log([clickPtr.lat, clickPtr.lng]);
-          dir.set([clickPtr.lat, clickPtr.lng]);
+          dir.set(
+            computeScore(
+              [clickPtr.lat, clickPtr.lng],
+              [gameState.latitude, gameState.longitude]
+            )
+          );
           history.push("/");
         }
       }
@@ -124,6 +131,7 @@ const TheGame = ({ history, gate, gameState, ...props }) => {
               departureAirportGeography.latitude,
               departureAirportGeography.longitude
             ]}
+            icon={IconDeparture}
           />
           <Marker
             position={[
@@ -132,7 +140,9 @@ const TheGame = ({ history, gate, gameState, ...props }) => {
             ]}
             icon={IconArrival}
           />
-          {clickPtr.length !== 0 && <Marker position={clickPtr} />}
+          {clickPtr.length !== 0 && (
+            <Marker position={clickPtr} icon={IconPlane} />
+          )}
         </Map>
       </div>
     </div>
