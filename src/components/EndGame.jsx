@@ -58,7 +58,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1),
     alignItems: "center",
     marginTop: theme.spacing(4),
-    color: '#FFF'
+    color: "#FFF"
   },
   cartContainer: {
     display: "flex",
@@ -80,7 +80,7 @@ const EndGame = ({ gameState, history, points, ...props }) => {
 
   useEffect(() => {
     setTimeout(() => {
-      // history.push("/waitingroom");
+      history.push("/waitingroom");
     }, 10000);
   });
 
@@ -95,19 +95,28 @@ const EndGame = ({ gameState, history, points, ...props }) => {
       <span className={classes.emojis}>
         {
           celebrations[
-          Math.max(0, Math.floor((celebrations.length * points - 1) / 5000))
+            Math.max(0, Math.floor((celebrations.length * points - 1) / 5000))
           ]
         }
       </span>
       <div className={classes.pointsBall}>+{points}</div>
-      {price !== -1 && <div className={classes.priceContainer}>
-        <div>{price} €</div>           
-        <a target="_blank" className={classes.cartContainer} href={"https://www.skyscanner.es/transporte/vuelos/" + aeroport1 + "/" + aeroport2}>
-          <img alt="shopCart" src={ShopCart} className={classes.cartImg} />
-        </a>
-        
-      </div>}
-
+      {price !== -1 && (
+        <div className={classes.priceContainer}>
+          <div>{price} €</div>
+          <a
+            target="_blank"
+            className={classes.cartContainer}
+            href={
+              "https://www.skyscanner.es/transporte/vuelos/" +
+              aeroport1 +
+              "/" +
+              aeroport2
+            }
+          >
+            <img alt="shopCart" src={ShopCart} className={classes.cartImg} />
+          </a>
+        </div>
+      )}
     </div>
   );
 };
