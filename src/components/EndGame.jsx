@@ -41,6 +41,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const aeroport1 = "BCN";
+const aeroport2 = "PCI";
+const price = 30;
+
 const EndGame = ({ history, points, ...props }) => {
   const classes = useStyles();
   console.log((celebrations.length * points - 1) / 5000);
@@ -59,6 +63,12 @@ const EndGame = ({ history, points, ...props }) => {
         }
       </span>
       <div className={classes.pointsBall}>+{points}</div>
+      <div>
+        <span>{price} €</span>
+        <a href={"https://www.skyscanner.es/transporte/vuelos"+aeroport1+"/"+aeroport2}>
+          {/* <img alt="shopCart" src={shopCartImg}/> */}
+        </a>
+      </div>
     </div>
   );
 };
