@@ -77,12 +77,14 @@ const WaitingRoom = ({ gameState, gate, history, ...props }) => {
 
   //Registra l'interval de clock
   useEffect(() => {
+    //Do not let direct access:
+    if (gate === "-") history.push("/");
     const { endTime, startTime } = gameState;
     const intId = setInterval(() => {
       // Prepare times
       let time = Date.now();
       let remTime = 0;
-      const nextStart = endTime + 35000;
+      const nextStart = endTime + 29000;
 
       // Prepare for start if came before
       if (time < startTime) {
@@ -141,7 +143,7 @@ const WaitingRoom = ({ gameState, gate, history, ...props }) => {
         </div>
       </div>
       <div>
-        <BarChart data={gameScores} />
+        <BarChart gate={gate} data={gameScores} />
       </div>
       <br />
     </div>

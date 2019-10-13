@@ -122,7 +122,7 @@ export const getPlaneInfo = async () => {
       apiKeys[randomN(apiKeys.length)]
     }&flight_icao=${plane_info.planeIcao}&dep_iataCode=${
       plane_info.departureIata
-    }`;
+    }&status=active`;
     console.log("R2_URL: " + url2);
     let data2 = await request(url2);
     console.log("R2_DATA: " + JSON.stringify(data2));
@@ -167,8 +167,8 @@ export const getPlaneInfo = async () => {
   var ref = db.ref("/gameState");
   ref.remove();
   ref.set({
-    startTime: Date.now() + 2000,
-    endTime: Date.now() + 22000,
+    startTime: Date.now() + 10000,
+    endTime: Date.now() + 30000,
     planeDeparture:
       new Date(plane_info.departureTime).getTime() - data3.GMT * 3600000,
     planeArrival:

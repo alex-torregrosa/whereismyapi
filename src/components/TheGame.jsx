@@ -83,6 +83,7 @@ const TheGame = ({ history, gate, gameState, setPoints, ...props }) => {
 
   // Registra l'interval de clock
   useEffect(() => {
+    if (gate === "-") history.push("/");
     const intId = setInterval(() => {
       setCurrentTime(Date.now());
       if (Date.now() > gameState.endTime) {

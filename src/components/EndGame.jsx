@@ -95,7 +95,7 @@ const EndGame = ({ gameState, history, points, ...props }) => {
       <span className={classes.emojis}>
         {
           celebrations[
-            Math.max(0, Math.floor((celebrations.length * points - 1) / 5000))
+            Math.max(0, Math.floor((celebrations.length * points - 1) / 1500))
           ]
         }
       </span>
