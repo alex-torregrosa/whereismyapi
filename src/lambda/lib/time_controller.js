@@ -122,7 +122,7 @@ export const getPlaneInfo = async () => {
       apiKeys[randomN(apiKeys.length)]
     }&flight_icao=${plane_info.planeIcao}&dep_iataCode=${
       plane_info.departureIata
-    }&arr_iataCode=${plane_info.arrivalIata}&status=active`;
+    }&status=active`;
     console.log("R2_URL: " + url2);
     let data2 = await request(url2);
     console.log("R2_DATA: " + JSON.stringify(data2));
