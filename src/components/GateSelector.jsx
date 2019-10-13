@@ -5,7 +5,15 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 
-const gates = ["A1", "A2", "A3", "B1", "B2", "B3", "C1"];
+const gates = [
+  "Gate A1",
+  "Gate A2",
+  "Gate A3",
+  "Gate B1",
+  "Gate B2",
+  "Gate B3",
+  "Gate C1"
+];
 
 const useStyles = makeStyles(theme => ({
   main: {
