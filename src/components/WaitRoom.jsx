@@ -143,7 +143,7 @@ const WaitingRoom = ({ gameState, gate, history, ...props }) => {
         </div>
       </div>
       <div>
-        <BarChart data={gameScores} />
+        <BarChart gate={gate} data={gameScores} />
       </div>
       <br />
     </div>
