@@ -1,7 +1,7 @@
 import React from "react";
 import { Chart } from "react-google-charts";
 
-export const BarChart = ({ data, ...props }) => {
+export const BarChart = ({ data, gate, ...props }) => {
   let dataPts = [
     [
       "Gate",
@@ -16,7 +16,10 @@ export const BarChart = ({ data, ...props }) => {
     ]
   ];
   for (let item in data)
-    dataPts = [...dataPts, [item, data[item], "#FF1654", null]];
+    dataPts = [
+      ...dataPts,
+      [item, data[item], item === gate ? "#8C0C2E" : "#FF1654", null]
+    ];
   return (
     <div>
       <Chart
