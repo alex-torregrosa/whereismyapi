@@ -167,8 +167,8 @@ export const getPlaneInfo = async () => {
   var ref = db.ref("/gameState");
   ref.remove();
   ref.set({
-    startTime: Date.now() + 30000,
-    endTime: Date.now() + 50000,
+    startTime: Date.now() + 10000,
+    endTime: Date.now() + 30000,
     planeDeparture:
       new Date(plane_info.departureTime).getTime() - data3.GMT * 3600000,
     planeArrival:

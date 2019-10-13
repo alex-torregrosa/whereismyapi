@@ -77,6 +77,8 @@ const WaitingRoom = ({ gameState, gate, history, ...props }) => {
 
   //Registra l'interval de clock
   useEffect(() => {
+    //Do not let direct access:
+    if (gate === "-") history.push("/");
     const { endTime, startTime } = gameState;
     const intId = setInterval(() => {
       // Prepare times
