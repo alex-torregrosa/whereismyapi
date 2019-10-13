@@ -7,6 +7,7 @@ import Sun from "../images/sun.svg";
 import Ground from "../images/ground.svg";
 import { withRouter } from "react-router-dom";
 import Cloud from "../images/cloud.svg";
+import Plane from "../images/plane_main.svg";
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -18,8 +19,7 @@ const useStyles = makeStyles(theme => ({
   },
   titleText: {
     color: "#FFFFFF",
-    marginTop: theme.spacing(4),
-    zIndex: 1
+    marginTop: theme.spacing(4)
   },
   playButtonContainer: {
     position: "fixed",
@@ -62,7 +62,18 @@ const useStyles = makeStyles(theme => ({
   cloudContainer: {
     position: "fixed",
     top: 0,
-    right: 0
+    right: 0,
+    zIndex: 101
+  },
+  planeContainer: {
+    position: "fixed",
+    bottom: "0",
+    left: "-60vmin",
+    animationName: "$planeFly",
+    animationDuration: "14s",
+    animationIterationCount: "infinite",
+    animationTimingFunction: "linear",
+    zIndex: 100
   },
   titleContainer: {
     position: "fixed",
@@ -70,11 +81,16 @@ const useStyles = makeStyles(theme => ({
     top: "15vmin",
     transform: "translate(-50%,0%)",
     textAlign: "center",
-    width: "80vw"
+    width: "80vw",
+    zIndex: 150
   },
   cloudImage: {
     height: "40vmin",
     width: "80vmin"
+  },
+  plane: {
+    width: "37.8vmin",
+    height: "18.3vmin"
   },
   "@media screen and (max-width:824px) and (orientation:landscape) ": {
     groundContainer: {
@@ -90,6 +106,10 @@ const useStyles = makeStyles(theme => ({
   "@keyframes sunGrow": {
     from: { transform: "scale(1)" },
     to: { transform: "scale(1.1)" }
+  },
+  "@keyframes planeFly": {
+    from: { left: "-60vmin", bottom: "0" },
+    to: { left: "200vh", bottom: "30vh" }
   }
 }));
 
@@ -106,6 +126,10 @@ const MainPage = ({ history, ...props }) => {
           Where's my <b>API</b>?
         </Typography>
       </div>
+      <div className={classes.planeContainer}>
+        <img src={Plane} className={classes.plane} alt="Plane" />
+      </div>
+
       <div className={classes.playButtonContainer}>
         <IconButton
           aria-label="play"
