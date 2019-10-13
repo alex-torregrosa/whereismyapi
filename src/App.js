@@ -12,7 +12,7 @@ const gameStateRef = db.ref("gameState");
 function App(props) {
   const [gate, setGate] = useState("-");
   const [gameState, setGameStateVar] = useState(false);
-  const [points, setPoints] = useState(false);
+  const [points, setPoints] = useState(-1);
 
   useEffect(() => {
     gameStateRef.off();
