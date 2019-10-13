@@ -82,7 +82,7 @@ const WaitingRoom = ({ gameState, gate, history, ...props }) => {
       // Prepare times
       let time = Date.now();
       let remTime = 0;
-      const nextStart = endTime + 35000;
+      const nextStart = endTime + 29000;
 
       // Prepare for start if came before
       if (time < startTime) {
