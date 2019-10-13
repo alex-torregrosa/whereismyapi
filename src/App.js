@@ -41,7 +41,7 @@ function App(props) {
           <TheGame gate={gate} gameState={gameState} setPoints={setPoints} />
         </Route>
         <Route path="/endgame">
-          <EndGame points={points} />
+          <EndGame points={points} gameState={gameState} />
         </Route>
         <Route path="/">
           <MainPage />
