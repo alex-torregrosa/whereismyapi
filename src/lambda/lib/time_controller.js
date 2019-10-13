@@ -175,6 +175,8 @@ export const getPlaneInfo = async () => {
       new Date(plane_info.arrivalTime).getTime() - data4.GMT * 3600000,
     startAirport: plane_info.departureAirport,
     endAirport: plane_info.arrivalAirport,
+    startIata: plane_info.departureIata,
+    endIata: plane_info.arrivalIata,
     icao: plane_info.planeIcao,
     latitude: plane_info.geography.latitude,
     longitude: plane_info.geography.longitude,
