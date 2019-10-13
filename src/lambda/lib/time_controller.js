@@ -175,6 +175,8 @@ export const getPlaneInfo = async () => {
       new Date(plane_info.arrivalTime).getTime() - data4.GMT * 3600000,
     startAirport: plane_info.departureAirport,
     endAirport: plane_info.arrivalAirport,
+    startIata: plane_info.departureIata,
+    endIata: plane_info.arrivalIata,
     icao: plane_info.planeIcao,
     latitude: plane_info.geography.latitude,
     longitude: plane_info.geography.longitude,
@@ -192,10 +194,12 @@ export const calcScores = async () => {
 
   for (const gate in users) {
     let tempScore = 0;
+    let userCount = 0;
     for (const user in users[gate]) {
+      userCount += 1;
       tempScore += users[gate][user];
     }
-    users[gate].score = tempScore;
+    users[gate].score = Math.floor(tempScore / userCount);
   }
 
   const gateScores = (await scoresRef.once("value")).val();
