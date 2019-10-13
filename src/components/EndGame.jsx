@@ -79,7 +79,7 @@ const EndGame = ({ gameState, history, points, ...props }) => {
   const [price, setPrice] = useState(-1);
 
   useEffect(() => {
-    if (point === -1) history.push("/");
+    if (points === -1) history.push("/");
     setTimeout(() => {
       history.push("/waitingroom");
     }, 10000);
