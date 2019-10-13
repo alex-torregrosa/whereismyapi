@@ -161,6 +161,7 @@ export const getPlaneInfo = async () => {
     latitude: parseFloat(data4.latitudeAirport),
     longitude: parseFloat(data4.longitudeAirport)
   };
+
   console.log("PLANE_INFO", plane_info);
 
   var ref = db.ref("/gameState");
@@ -168,8 +169,10 @@ export const getPlaneInfo = async () => {
   ref.set({
     startTime: Date.now() + 2000,
     endTime: Date.now() + 22000,
-    planeDeparture: new Date(plane_info.departureTime).getTime(),
-    planeArrival: new Date(plane_info.arrivalTime).getTime(),
+    planeDeparture:
+      new Date(plane_info.departureTime).getTime() - data3.GMT * 3600000,
+    planeArrival:
+      new Date(plane_info.arrivalTime).getTime() - data4.GMT * 3600000,
     startAirport: plane_info.departureAirport,
     endAirport: plane_info.arrivalAirport,
     icao: plane_info.planeIcao,
