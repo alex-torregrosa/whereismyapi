@@ -190,7 +190,6 @@ export const calcScores = async () => {
   const scoresRef = db.ref("/scores");
 
   let users = (await usersRef.once("value")).val();
-  await usersRef.remove();
 
   for (const gate in users) {
     let tempScore = 0;
@@ -209,4 +208,5 @@ export const calcScores = async () => {
     else gateScores[gate] = users[gate].score;
   }
   await scoresRef.set(gateScores);
+  await usersRef.remove();
 };
