@@ -194,10 +194,12 @@ export const calcScores = async () => {
 
   for (const gate in users) {
     let tempScore = 0;
+    let userCount = 0;
     for (const user in users[gate]) {
+      userCount += 1;
       tempScore += users[gate][user];
     }
-    users[gate].score = tempScore;
+    users[gate].score = Math.floor(tempScore / userCount);
   }
 
   const gateScores = (await scoresRef.once("value")).val();
