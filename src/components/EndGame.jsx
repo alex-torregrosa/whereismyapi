@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
+import ShopCart from "../images/cart.svg";
 
 const celebrations = [
   "🤦",
@@ -48,6 +49,25 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center",
     color: "#FFF",
     fontSize: "10vmin"
+  },
+  priceContainer: {
+    display: "flex",
+    backgroundColor: "#0093c4",
+    borderRadius: theme.spacing(1),
+    fontSize: "50px",
+    padding: theme.spacing(1),
+    alignItems: "center",
+    marginTop: theme.spacing(4),
+    color: "#FFF"
+  },
+  cartContainer: {
+    display: "flex",
+    alignItems: "center",
+    marginLeft: theme.spacing(1)
+  },
+  cartImg: {
+    height: "15vmin",
+    width: "15vmin"
   }
 }));
 
@@ -80,19 +100,23 @@ const EndGame = ({ gameState, history, points, ...props }) => {
         }
       </span>
       <div className={classes.pointsBall}>+{points}</div>
-      <div>
-        {price !== -1 && <span>{price} €</span>}
-        <a
-          href={
-            "https://www.skyscanner.es/transporte/vuelos" +
-            aeroport1 +
-            "/" +
-            aeroport2
-          }
-        >
-          {/* <img alt="shopCart" src={shopCartImg}/> */}
-        </a>
-      </div>
+      {price !== -1 && (
+        <div className={classes.priceContainer}>
+          <div>{price} €</div>
+          <a
+            target="_blank"
+            className={classes.cartContainer}
+            href={
+              "https://www.skyscanner.es/transporte/vuelos/" +
+              aeroport1 +
+              "/" +
+              aeroport2
+            }
+          >
+            <img alt="shopCart" src={ShopCart} className={classes.cartImg} />
+          </a>
+        </div>
+      )}
     </div>
   );
 };

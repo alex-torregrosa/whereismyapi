@@ -202,7 +202,7 @@ export const calcScores = async () => {
     users[gate].score = Math.floor(tempScore / userCount);
   }
 
-  const gateScores = (await scoresRef.once("value")).val();
+  const gateScores = (await scoresRef.once("value")).val() || {};
   for (const gate in users) {
     // Si existeix sumem, si no (o es 0), asignem
     if (gateScores[gate]) gateScores[gate] += users[gate].score;

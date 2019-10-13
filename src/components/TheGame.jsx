@@ -96,10 +96,10 @@ const TheGame = ({ history, gate, gameState, setPoints, ...props }) => {
           );
           dir.set(punts);
           setPoints(punts);
-          //history.push("/endGame");
+          history.push("/endGame");
         } else {
           setPoints(0);
-          //history.push("/endGame");
+          history.push("/endGame");
         }
       }
     }, 1000);
